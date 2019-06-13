@@ -62,7 +62,7 @@ class BillingForm extends Component {
             type="number"
             value={this.state.storage}
             onChange={this.handleFieldChange}
-            placeholder="Number of notes to store"
+            placeholder="Number of artworks to store"
           />
         </FormGroup>
         <hr />

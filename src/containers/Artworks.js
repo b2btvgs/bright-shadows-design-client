@@ -4,9 +4,9 @@ import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import { s3Upload } from "../libs/awsLib";
 import config from "../config";
-import "./Notes.css";
+import "./Artworks.css";
 
-export default class Notes extends Component {
+export default class Artworks extends Component {
   constructor(props) {
     super(props);
 
@@ -42,17 +42,17 @@ export default class Notes extends Component {
   }
 
   getNote() {
-    return API.get("notes", `/notes/${this.props.match.params.id}`);
+    return API.get("artworks", `/artworks/${this.props.match.params.id}`);
   }
 
   saveNote(note) {
-    return API.put("notes", `/notes/${this.props.match.params.id}`, {
+    return API.put("artworks", `/artworks/${this.props.match.params.id}`, {
       body: note
     });
   }
 
   deleteNote() {
-    return API.del("notes", `/notes/${this.props.match.params.id}`);
+    return API.del("artworks", `/artworks/${this.props.match.params.id}`);
   }
 
   validateForm() {
@@ -67,11 +67,11 @@ export default class Notes extends Component {
     this.setState({
       [event.target.id]: event.target.value
     });
-  }
+  };
 
   handleFileChange = event => {
     this.file = event.target.files[0];
-  }
+  };
 
   handleSubmit = async event => {
     let attachment;
@@ -79,7 +79,10 @@ export default class Notes extends Component {
     event.preventDefault();
 
     if (this.file && this.file.size > config.MAX_ATTACHMENT_SIZE) {
-      alert(`Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE/1000000} MB.`);
+      alert(
+        `Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE /
+          1000000} MB.`
+      );
       return;
     }
 
@@ -99,7 +102,7 @@ export default class Notes extends Component {
       alert(e);
       this.setState({ isLoading: false });
     }
-  }
+  };
 
   handleDelete = async event => {
     event.preventDefault();
@@ -121,12 +124,12 @@ export default class Notes extends Component {
       alert(e);
       this.setState({ isDeleting: false });
     }
-  }
+  };
 
   render() {
     return (
-      <div className="Notes">
-        {this.state.note &&
+      <div className="Artworks">
+        {this.state.note && (
           <form onSubmit={this.handleSubmit}>
             <FormGroup controlId="content">
               <FormControl
@@ -135,7 +138,7 @@ export default class Notes extends Component {
                 componentClass="textarea"
               />
             </FormGroup>
-            {this.state.note.attachment &&
+            {this.state.note.attachment && (
               <FormGroup>
                 <ControlLabel>Attachment</ControlLabel>
                 <FormControl.Static>
@@ -147,10 +150,12 @@ export default class Notes extends Component {
                     {this.formatFilename(this.state.note.attachment)}
                   </a>
                 </FormControl.Static>
-              </FormGroup>}
+              </FormGroup>
+            )}
             <FormGroup controlId="file">
-              {!this.state.note.attachment &&
-                <ControlLabel>Attachment</ControlLabel>}
+              {!this.state.note.attachment && (
+                <ControlLabel>Attachment</ControlLabel>
+              )}
               <FormControl onChange={this.handleFileChange} type="file" />
             </FormGroup>
             <LoaderButton
@@ -172,7 +177,8 @@ export default class Notes extends Component {
               text="Delete"
               loadingText="Deleting…"
             />
-          </form>}
+          </form>
+        )}
       </div>
     );
   }

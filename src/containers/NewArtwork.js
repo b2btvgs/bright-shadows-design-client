@@ -4,9 +4,9 @@ import { FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 import LoaderButton from "../components/LoaderButton";
 import { s3Upload } from "../libs/awsLib";
 import config from "../config";
-import "./NewNote.css";
+import "./NewArtwork.css";
 
-export default class NewNote extends Component {
+export default class NewArtwork extends Component {
   constructor(props) {
     super(props);
 
@@ -18,9 +18,9 @@ export default class NewNote extends Component {
     };
   }
 
-  createNote(note) {
-    return API.post("notes", "/notes", {
-      body: note
+  createArtwork(artwork) {
+    return API.post("artworks", "/artworks", {
+      body: artwork
     });
   }
 
@@ -32,28 +32,29 @@ export default class NewNote extends Component {
     this.setState({
       [event.target.id]: event.target.value
     });
-  }
+  };
 
   handleFileChange = event => {
     this.file = event.target.files[0];
-  }
+  };
 
   handleSubmit = async event => {
     event.preventDefault();
 
     if (this.file && this.file.size > config.MAX_ATTACHMENT_SIZE) {
-      alert(`Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE/1000000} MB.`);
+      alert(
+        `Please pick a file smaller than ${config.MAX_ATTACHMENT_SIZE /
+          1000000} MB.`
+      );
       return;
     }
 
     this.setState({ isLoading: true });
 
     try {
-      const attachment = this.file
-        ? await s3Upload(this.file)
-        : null;
+      const attachment = this.file ? await s3Upload(this.file) : null;
 
-      await this.createNote({
+      await this.createArtwork({
         attachment,
         content: this.state.content
       });
@@ -62,11 +63,11 @@ export default class NewNote extends Component {
       alert(e);
       this.setState({ isLoading: false });
     }
-  }
+  };
 
   render() {
     return (
-      <div className="NewNote">
+      <div className="NewArtwork">
         <form onSubmit={this.handleSubmit}>
           <FormGroup controlId="content">
             <FormControl

@@ -11,7 +11,7 @@ export default class Home extends Component {
 
     this.state = {
       isLoading: true,
-      notes: []
+      artworks: []
     };
   }
 
@@ -21,8 +21,8 @@ export default class Home extends Component {
     }
 
     try {
-      const notes = await this.notes();
-      this.setState({ notes });
+      const artworks = await this.artworks();
+      this.setState({ artworks });
     } catch (e) {
       alert(e);
     }
@@ -30,32 +30,30 @@ export default class Home extends Component {
     this.setState({ isLoading: false });
   }
 
-  notes() {
-    return API.get("notes", "/notes");
+  artworks() {
+    return API.get("artworks", "/artworks");
   }
 
-  renderNotesList(notes) {
-    return [{}].concat(notes).map(
-      (note, i) =>
-        i !== 0
-          ? <LinkContainer
-              key={note.noteId}
-              to={`/notes/${note.noteId}`}
-            >
-              <ListGroupItem header={note.content.trim().split("\n")[0]}>
-                {"Created: " + new Date(note.createdAt).toLocaleString()}
-              </ListGroupItem>
-            </LinkContainer>
-          : <LinkContainer
-              key="new"
-              to="/notes/new"
-            >
-              <ListGroupItem>
-                <h4>
-                  <b>{"\uFF0B"}</b> Create a new note
-                </h4>
-              </ListGroupItem>
-            </LinkContainer>
+  renderartworksList(artworks) {
+    return [{}].concat(artworks).map((artwork, i) =>
+      i !== 0 ? (
+        <LinkContainer
+          key={artwork.artworkId}
+          to={`/artworks/${artwork.artworkId}`}
+        >
+          <ListGroupItem header={artwork.content.trim().split("\n")[0]}>
+            {"Created: " + new Date(artwork.createdAt).toLocaleString()}
+          </ListGroupItem>
+        </LinkContainer>
+      ) : (
+        <LinkContainer key="new" to="/artworks/new">
+          <ListGroupItem>
+            <h4>
+              <b>{"\uFF0B"}</b> Create a new artwork
+            </h4>
+          </ListGroupItem>
+        </LinkContainer>
+      )
     );
   }
 
@@ -63,7 +61,7 @@ export default class Home extends Component {
     return (
       <div className="lander">
         <h1>Scratch</h1>
-        <p>A simple note taking app</p>
+        <p>A simple artwork taking app</p>
         <div>
           <Link to="/login" className="btn btn-info btn-lg">
             Login
@@ -76,12 +74,13 @@ export default class Home extends Component {
     );
   }
 
-  renderNotes() {
+  renderartworks() {
     return (
-      <div className="notes">
-        <PageHeader>Your Notes</PageHeader>
+      <div className="artworks">
+        <PageHeader>Your artworks</PageHeader>
         <ListGroup>
-          {!this.state.isLoading && this.renderNotesList(this.state.notes)}
+          {!this.state.isLoading &&
+            this.renderartworksList(this.state.artworks)}
         </ListGroup>
       </div>
     );
@@ -90,7 +89,9 @@ export default class Home extends Component {
   render() {
     return (
       <div className="Home">
-        {this.props.isAuthenticated ? this.renderNotes() : this.renderLander()}
+        {this.props.isAuthenticated
+          ? this.renderartworks()
+          : this.renderLander()}
       </div>
     );
   }
