@@ -15,7 +15,7 @@ export default class Artworks extends Component {
     this.state = {
       isLoading: null,
       isDeleting: null,
-      note: null,
+      artwork: null,
       content: "",
       attachmentURL: null
     };
@@ -24,15 +24,15 @@ export default class Artworks extends Component {
   async componentDidMount() {
     try {
       let attachmentURL;
-      const note = await this.getNote();
-      const { content, attachment } = note;
+      const artwork = await this.getArtwork();
+      const { content, attachment } = artwork;
 
       if (attachment) {
         attachmentURL = await Storage.vault.get(attachment);
       }
 
       this.setState({
-        note,
+        artwork,
         content,
         attachmentURL
       });
@@ -41,17 +41,18 @@ export default class Artworks extends Component {
     }
   }
 
-  getNote() {
+  getArtwork() {
+    console.log("id is: " + JSON.stringify(this.props));
     return API.get("artworks", `/artworks/${this.props.match.params.id}`);
   }
 
-  saveNote(note) {
+  saveArtwork(artwork) {
     return API.put("artworks", `/artworks/${this.props.match.params.id}`, {
-      body: note
+      body: artwork
     });
   }
 
-  deleteNote() {
+  deleteArtwork() {
     return API.del("artworks", `/artworks/${this.props.match.params.id}`);
   }
 
@@ -93,9 +94,9 @@ export default class Artworks extends Component {
         attachment = await s3Upload(this.file);
       }
 
-      await this.saveNote({
+      await this.saveArtwork({
         content: this.state.content,
-        attachment: attachment || this.state.note.attachment
+        attachment: attachment || this.state.artwork.attachment
       });
       this.props.history.push("/");
     } catch (e) {
@@ -108,7 +109,7 @@ export default class Artworks extends Component {
     event.preventDefault();
 
     const confirmed = window.confirm(
-      "Are you sure you want to delete this note?"
+      "Are you sure you want to delete this artwork?"
     );
 
     if (!confirmed) {
@@ -118,7 +119,7 @@ export default class Artworks extends Component {
     this.setState({ isDeleting: true });
 
     try {
-      await this.deleteNote();
+      await this.deleteArtwork();
       this.props.history.push("/");
     } catch (e) {
       alert(e);
@@ -129,7 +130,7 @@ export default class Artworks extends Component {
   render() {
     return (
       <div className="Artworks">
-        {this.state.note && (
+        {this.state.artwork && (
           <form onSubmit={this.handleSubmit}>
             <FormGroup controlId="content">
               <FormControl
@@ -138,7 +139,7 @@ export default class Artworks extends Component {
                 componentClass="textarea"
               />
             </FormGroup>
-            {this.state.note.attachment && (
+            {this.state.artwork.attachment && (
               <FormGroup>
                 <ControlLabel>Attachment</ControlLabel>
                 <FormControl.Static>
@@ -147,13 +148,13 @@ export default class Artworks extends Component {
                     rel="noopener noreferrer"
                     href={this.state.attachmentURL}
                   >
-                    {this.formatFilename(this.state.note.attachment)}
+                    {this.formatFilename(this.state.artwork.attachment)}
                   </a>
                 </FormControl.Static>
               </FormGroup>
             )}
             <FormGroup controlId="file">
-              {!this.state.note.attachment && (
+              {!this.state.artwork.attachment && (
                 <ControlLabel>Attachment</ControlLabel>
               )}
               <FormControl onChange={this.handleFileChange} type="file" />

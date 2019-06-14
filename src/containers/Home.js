@@ -34,7 +34,8 @@ export default class Home extends Component {
     return API.get("artworks", "/artworks");
   }
 
-  renderartworksList(artworks) {
+  renderArtworksList(artworks) {
+    console.log("list: artworks is: " + JSON.stringify(artworks));
     return [{}].concat(artworks).map((artwork, i) =>
       i !== 0 ? (
         <LinkContainer
@@ -74,13 +75,13 @@ export default class Home extends Component {
     );
   }
 
-  renderartworks() {
+  renderArtworks() {
     return (
       <div className="artworks">
         <PageHeader>Your artworks</PageHeader>
         <ListGroup>
           {!this.state.isLoading &&
-            this.renderartworksList(this.state.artworks)}
+            this.renderArtworksList(this.state.artworks)}
         </ListGroup>
       </div>
     );
@@ -90,7 +91,7 @@ export default class Home extends Component {
     return (
       <div className="Home">
         {this.props.isAuthenticated
-          ? this.renderartworks()
+          ? this.renderArtworks()
           : this.renderLander()}
       </div>
     );

@@ -31,7 +31,7 @@ $ npm run start
 To deploy, replace the following in the [`package.json`](package.json) with your S3 bucket and CloudFront distributions.
 
 ```
-"deploy": "aws s3 sync build/ s3://notes-app-client",
+"deploy": "aws s3 sync build/ s3://artworks-app-client",
 "postdeploy": "aws cloudfront create-invalidation --distribution-id E1KTCKT9SOAHBW --paths '/*' && aws cloudfront create-invalidation --distribution-id E3MQXGQ47VCJB0 --paths '/*'",
 ```
 
